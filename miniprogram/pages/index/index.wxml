@@ -1,0 +1,88 @@
+<view class="page" wx:if="{{stage === 'form'}}">
+  <view class="eyebrow">车牌快速录入</view>
+  <view class="title">拍一下，填好车牌号</view>
+  <view class="subtitle">支持单层蓝牌 · 新能源绿牌 · 货车黄牌</view>
+  <view class="card">
+    <view class="label">车牌号码</view>
+    <input class="plate-input" value="{{plateNumber}}" bindinput="inputPlate" placeholder="例如：粤B12345" maxlength="16" adjust-position="{{true}}" />
+    <view class="field-tip" wx:if="{{plateNumber && !inputValid}}">请输入完整的普通七位或新能源八位车牌号</view>
+    <view class="field-tip success" wx:elif="{{confirmed}}">已确认 · {{plateNumber}}</view>
+    <view class="field-tip" wx:else>可拍照识别，也可以直接输入</view>
+    <button class="primary" bindtap="startCamera" loading="{{busy}}" disabled="{{busy}}">拍照识别</button>
+    <button class="secondary" wx:if="{{inputValid && !confirmed}}" bindtap="confirmManual">确认车牌号</button>
+  </view>
+  <view class="notice" wx:if="{{notice}}">{{notice}}</view>
+  <button class="text-button" wx:if="{{notice}}" bindtap="openCameraSettings">相机权限设置</button>
+  <view class="instructions">
+    <view class="instruction-title">这样拍，更容易识别</view>
+    <view>1. 面向车头，车牌大致居中即可</view>
+    <view>2. 尽量靠近，避开反光和遮挡</view>
+    <view>3. 拍照后核对号码，确认即可回填</view>
+  </view>
+  <view class="privacy">照片仅用于本次本机识别，不上传、不保存记录</view>
+  <button class="text-button" bindtap="toggleDebug">{{debugEnabled ? '关闭本机调试面板' : '开启本机调试面板'}}</button>
+  <view class="field-tip" wx:if="{{debugEnabled}}">下次拍照会记录各轮输入图与事件；console 始终打印原始 OCR 内容。</view>
+</view>
+
+<view class="capture-page" wx:elif="{{stage === 'camera'}}">
+  <view class="capture-heading">对准车头车牌</view>
+  <view class="capture-hint">车牌大致居中即可，无需贴合取景框</view>
+  <view class="camera-viewport" id="cameraViewport">
+    <camera class="camera" device-position="back" flash="{{flash}}" resolution="high" bindinitdone="cameraInitialized" binderror="cameraError">
+      <cover-view class="finder" id="finder"></cover-view>
+      <cover-view class="finder-label">车牌放在这附近即可</cover-view>
+    </camera>
+  </view>
+  <view class="capture-controls">
+    <button class="dark-button" bindtap="toggleFlash" disabled="{{busy}}">{{flash === 'torch' ? '关闭补光' : '开启补光'}}</button>
+    <button class="shutter" bindtap="takePhoto" disabled="{{busy || !cameraReady}}" loading="{{busy}}">{{cameraReady ? '拍照' : '启动中'}}</button>
+    <button class="dark-button" bindtap="cancelCapture">取消</button>
+  </view>
+</view>
+
+<view class="page" wx:else>
+  <view class="eyebrow">{{stage === 'processing' ? '正在本机识别' : '核对车牌号码'}}</view>
+  <view class="title">{{stage === 'processing' ? '正在读取车牌…' : stage === 'error' ? '再试一次，更清晰' : '确认后即可回填'}}</view>
+  <view class="card">
+    <view class="crop-preview" wx:if="{{previewPath}}" style="padding-top:{{previewRatio}};">
+      <canvas type="2d" id="ocrPreview" class="crop-image" />
+    </view>
+    <view class="field-tip" wx:if="{{pixelReady}}">{{pixelCaption}}</view>
+    <block wx:if="{{stage === 'processing'}}">
+      <view class="recognizing"><view class="spinner"></view>识别中，请稍候</view>
+      <view class="field-tip">正在读取照片；无有效号码时会扩大区域、全图重试，每轮最多 8 秒。</view>
+    </block>
+    <block wx:elif="{{stage === 'review'}}">
+      <view class="label">{{suggestionReason ? '疑似号码 · 请人工核对并修改' : '识别结果 · 可直接修改'}}</view>
+      <view class="notice" wx:if="{{suggestionReason}}">{{suggestionReason}}</view>
+      <view class="candidates" wx:if="{{candidates.length > 1}}">
+        <view wx:for="{{candidates}}" wx:key="*this" class="candidate {{draft === item ? 'selected' : ''}}" data-plate="{{item}}" bindtap="selectCandidate">{{item}}</view>
+      </view>
+      <input class="plate-input" value="{{draft}}" bindinput="inputDraft" maxlength="16" placeholder="请输入完整车牌号" />
+      <view class="field-tip {{draftValid ? '' : 'invalid'}}">{{draftValid ? '请核对省份汉字与每一位字母、数字' : '号码格式不完整，请修改后确认'}}</view>
+      <button class="primary" bindtap="confirmResult" disabled="{{!draftValid}}">确认使用</button>
+    </block>
+    <view class="notice" wx:else>{{error}}</view>
+    <view class="raw-text" wx:if="{{rawTexts.length && stage !== 'processing'}}">
+      <view class="label">OCR 原始文字</view>
+      <text selectable="{{true}}">{{rawTextDisplay}}</text>
+    </view>
+    <view class="timing" wx:if="{{elapsed && stage !== 'processing'}}">本次识别 {{elapsed}} 秒{{retried ? ' · 已扩大区域重试' : ''}}</view>
+    <button class="secondary" wx:if="{{stage !== 'processing'}}" bindtap="retryCapture">重新拍摄</button>
+    <button class="text-button" wx:if="{{stage !== 'processing' && previewPath}}" bindtap="rotateAndRecognize">照片顺时针旋转 90° 再识别</button>
+    <button class="text-button" wx:if="{{stage === 'error'}}" bindtap="manualEntry">手动输入</button>
+    <button class="text-button" bindtap="cancelCapture">{{stage === 'processing' ? '取消识别' : '取消并返回'}}</button>
+  </view>
+  <view class="debug-panel" wx:if="{{debugEnabled}}">
+    <view class="label">本机调试 · console 搜索 [plate-ocr]</view>
+    <view class="field-tip">可切换各轮实际输入；原图仅用于核对裁剪，坐标与方向信息在事件详情中。</view>
+    <view class="candidates">
+      <view wx:for="{{debugRounds}}" wx:key="*this" data-round="{{item}}" bindtap="selectDebugRound" class="candidate {{selectedRound === item ? 'selected' : ''}}">第 {{item}} 轮</view>
+    </view>
+    <image wx:if="{{previewPath}}" class="debug-original" src="{{previewPath}}" mode="widthFix" />
+    <view class="debug-event" wx:for="{{debugEvents}}" wx:key="key">
+      <view class="debug-event-title">第{{item.round}}轮 +{{item.atMs}}ms · {{item.kind}} · {{item.message}}</view>
+      <text selectable="{{true}}" class="debug-details">{{item.details}}</text>
+    </view>
+  </view>
+</view>

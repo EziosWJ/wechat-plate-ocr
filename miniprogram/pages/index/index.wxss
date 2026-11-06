@@ -1,0 +1,45 @@
+.page { padding: 56rpx 36rpx; min-height: 100vh; }
+.eyebrow { color: #176b63; font-size: 25rpx; font-weight: 600; letter-spacing: 3rpx; margin-bottom: 18rpx; }
+.title { font-size: 44rpx; font-weight: 700; line-height: 1.4; }
+.subtitle { color: #65778a; font-size: 25rpx; margin-top: 18rpx; line-height: 1.7; }
+.card { margin-top: 42rpx; background: #fff; padding: 36rpx; border-radius: 28rpx; box-shadow: 0 12rpx 48rpx rgba(24, 50, 70, .05); }
+.label { font-size: 26rpx; font-weight: 600; margin-bottom: 20rpx; }
+.plate-input { width: 100%; height: 108rpx; border: 2rpx solid #c9d7df; border-radius: 14rpx; background: #f9fbfc; padding: 0 20rpx; font-size: 40rpx; font-weight: 600; letter-spacing: 3rpx; }
+.field-tip { font-size: 23rpx; line-height: 1.7; color: #697b8a; margin: 16rpx 0 28rpx; }
+.success { color: #176b63; }
+.invalid { color: #b34830; }
+button { font-size: 29rpx; border-radius: 14rpx; font-weight: 600; }
+.primary { color: white; background: #176b63; margin-top: 24rpx; }
+.primary[disabled] { background: #b5c9c7; color: #fff; }
+.secondary { background: #eaf2f2; color: #176b63; margin-top: 22rpx; }
+.text-button { background: transparent; color: #5c7080; font-size: 25rpx; font-weight: 400; margin-top: 16rpx; }
+.notice { color: #87551b; background: #fff6e9; border-radius: 12rpx; padding: 22rpx; font-size: 26rpx; line-height: 1.7; margin-top: 24rpx; }
+.instructions { margin-top: 48rpx; color: #65778a; line-height: 2.2; font-size: 25rpx; }
+.instruction-title { color: #253e50; font-weight: 600; font-size: 28rpx; margin-bottom: 12rpx; }
+.privacy { font-size: 22rpx; color: #7b8a97; margin: 42rpx 0; text-align: center; line-height: 1.7; }
+.capture-page { min-height: 100vh; background: #101d28; color: #fff; padding-top: 24rpx; padding-bottom: calc(20rpx + env(safe-area-inset-bottom)); }
+.capture-heading { text-align: center; font-weight: 600; font-size: 34rpx; }
+.capture-hint { text-align: center; color: #b8c8d2; font-size: 24rpx; margin: 18rpx 20rpx 26rpx; }
+.camera-viewport { position: relative; width: 100%; height: 60vh; }
+.camera { width: 100%; height: 100%; }
+.finder { position: absolute; left: 18%; top: 50%; margin-top: -100rpx; width: 64%; height: 200rpx; border: 5rpx solid #65ecd0; border-radius: 12rpx; }
+.finder-label { position: absolute; top: 50%; margin-top: 128rpx; left: 10%; width: 80%; text-align: center; font-size: 26rpx; color: white; }
+.capture-controls { display: flex; align-items: center; justify-content: space-around; padding: 28rpx 16rpx; }
+.dark-button { background: transparent; color: #dae8ee; font-size: 25rpx; margin: 0; padding: 0 16rpx; }
+.shutter { margin: 0; width: 136rpx; height: 136rpx; border-radius: 50%; background: #effffa; color: #176b63; display: flex; align-items: center; justify-content: center; font-size: 28rpx; padding: 0; border: 8rpx solid #447e74; }
+.shutter[disabled] { background: #c9d6d4; color: #5f7772; }
+.crop-preview { width: 100%; position: relative; overflow: hidden; background: #e7eef1; border-radius: 12rpx; margin-bottom: 32rpx; }
+.crop-image { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
+.recognizing { display: flex; align-items: center; justify-content: center; gap: 20rpx; padding: 24rpx 0; color: #176b63; font-size: 30rpx; }
+.spinner { width: 32rpx; height: 32rpx; border-radius: 50%; border: 4rpx solid #dcebe8; border-top-color: #176b63; animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.candidates { display: flex; flex-wrap: wrap; gap: 12rpx; margin-bottom: 22rpx; }
+.candidate { padding: 16rpx; font-size: 26rpx; background: #f0f4f6; border: 2rpx solid #e0e7ec; border-radius: 10rpx; }
+.selected { color: #176b63; border-color: #176b63; background: #edf8f4; }
+.timing { font-size: 22rpx; color: #7b8a97; margin-top: 20rpx; }
+.raw-text { margin-top: 24rpx; padding: 20rpx; background: #f1f5f7; border-radius: 12rpx; font-size: 27rpx; line-height: 1.8; word-break: break-all; }
+.debug-panel { background: #fff; border: 2rpx dashed #93b6b0; border-radius: 20rpx; padding: 26rpx; margin-top: 30rpx; }
+.debug-original { width: 100%; margin-bottom: 20rpx; }
+.debug-event { padding: 18rpx 0; border-top: 1rpx solid #dfe8ed; }
+.debug-event-title { font-size: 24rpx; font-weight: 600; line-height: 1.6; color: #176b63; }
+.debug-details { white-space: pre-wrap; word-break: break-all; font-family: monospace; font-size: 22rpx; line-height: 1.7; color: #455c6a; }
