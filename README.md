@@ -10,7 +10,9 @@
 
 ## 界面预览
 
-<img src="docs/images/home.png" alt="车牌快速录入首页，包含车牌输入框、拍照识别按钮和调试面板入口" width="320" />
+| 车牌录入首页 | 拍照识别 |
+| --- | --- |
+| <img src="docs/images/home.png" alt="车牌快速录入首页，包含车牌输入框、拍照识别按钮和调试面板入口" width="300" /> | <img src="docs/images/camera.png" alt="车牌拍摄界面，包含参考取景框、补光开关和拍照按钮" width="300" /> |
 
 ## 功能
 
